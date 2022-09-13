@@ -6,19 +6,15 @@
  */
 export const svg2png = (
   svgString: string,
-  newWidth = 320,
-  newHeight = 320,
+  newWidth: number = 320,
+  newHeight: number = 320,
 ): Promise<string | null> => {
   return new Promise(resolve => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(svgString, 'image/svg+xml');
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(svgString, 'image/svg+xml');
     const modSvg = doc.documentElement;
     const width = Number(modSvg.getAttribute('width'));
     const height = Number(modSvg.getAttribute('height'));
-
-    if (!canScale(width, newWidth) || !canScale(height, newHeight)) {
-      throw new Error(`Unable to scale canvas without unwanted pixel gap`);
-    }
 
     const canvas = document.createElement('canvas');
     canvas.width = newWidth;
@@ -38,23 +34,10 @@ export const svg2png = (
       try {
         resolve(png);
       } catch (e) {
-        console.log('Error converting SVG to PNG:', e);
+        console.log('error converting svg to png: ', e);
         resolve(null);
       }
     };
     img.src = url;
   });
-};
-
-/**
- * Determine if the image can be scaled without creating a pixel gap.
- * This will occur if the `desired` pixel length divided by the `current`
- * pixel length has more than one decimal place.
- * @param current The current pixel length
- * @param desired The desired pixel length
- */
-const canScale = (current: number, desired: number) => {
-  const result = desired / current;
-  const decimals = result.toString().split('.')?.[1]?.length ?? 0;
-  return decimals <= 1;
 };

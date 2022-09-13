@@ -11,11 +11,10 @@ export const Backdrop: React.FC<{ onDismiss: () => void }> = props => {
 
 const DelegationModalOverlay: React.FC<{
   onDismiss: () => void;
-  delegateTo?: string;
 }> = props => {
-  const { onDismiss, delegateTo } = props;
+  const { onDismiss } = props;
 
-  const [isChangingDelegation, setIsChangingDelegation] = useState(delegateTo !== undefined);
+  const [isChangingDelegation, setIsChangingDelegation] = useState(false);
 
   return (
     <>
@@ -27,7 +26,7 @@ const DelegationModalOverlay: React.FC<{
 
       <div className={classes.modal}>
         {isChangingDelegation ? (
-          <ChangeDelegatePannel onDismiss={onDismiss} delegateTo={delegateTo} />
+          <ChangeDelegatePannel onDismiss={onDismiss} />
         ) : (
           <CurrentDelegatePannel
             onPrimaryBtnClick={() => setIsChangingDelegation(true)}
@@ -41,9 +40,8 @@ const DelegationModalOverlay: React.FC<{
 
 const DelegationModal: React.FC<{
   onDismiss: () => void;
-  delegateTo?: string;
 }> = props => {
-  const { onDismiss, delegateTo } = props;
+  const { onDismiss } = props;
   return (
     <>
       {ReactDOM.createPortal(
@@ -51,7 +49,7 @@ const DelegationModal: React.FC<{
         document.getElementById('backdrop-root')!,
       )}
       {ReactDOM.createPortal(
-        <DelegationModalOverlay onDismiss={onDismiss} delegateTo={delegateTo} />,
+        <DelegationModalOverlay onDismiss={onDismiss} />,
         document.getElementById('overlay-root')!,
       )}
     </>

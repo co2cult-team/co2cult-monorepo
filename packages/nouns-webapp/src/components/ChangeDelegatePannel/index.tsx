@@ -12,11 +12,9 @@ import { useDelegateVotes, useNounTokenBalance, useUserDelegatee } from '../../w
 import { usePickByState } from '../../utils/pickByState';
 import { buildEtherscanTxLink } from '../../utils/etherscan';
 import { useActiveLocale } from '../../hooks/useActivateLocale';
-import BrandSpinner from '../BrandSpinner';
 
 interface ChangeDelegatePannelProps {
   onDismiss: () => void;
-  delegateTo?: string;
 }
 
 export enum ChangeDelegateState {
@@ -44,7 +42,7 @@ const getTitleFromState = (state: ChangeDelegateState) => {
 };
 
 const ChangeDelegatePannel: React.FC<ChangeDelegatePannelProps> = props => {
-  const { onDismiss, delegateTo } = props;
+  const { onDismiss } = props;
 
   const [changeDelegateState, setChangeDelegateState] = useState<ChangeDelegateState>(
     ChangeDelegateState.ENTER_DELEGATE_ADDRESS,
@@ -52,10 +50,9 @@ const ChangeDelegatePannel: React.FC<ChangeDelegatePannelProps> = props => {
 
   const { library, account } = useEthers();
 
-  const [delegateAddress, setDelegateAddress] = useState(delegateTo ?? '');
-  const [delegateInputText, setDelegateInputText] = useState(delegateTo ?? '');
+  const [delegateAddress, setDelegateAddress] = useState('');
+  const [delegateInputText, setDelegateInputText] = useState('');
   const [delegateInputClass, setDelegateInputClass] = useState<string>('');
-  const [hasResolvedDeepLinkedENS, setHasResolvedDeepLinkedENS] = useState(false);
   const availableVotes = useNounTokenBalance(account ?? '') ?? 0;
   const { send: delegateVotes, state: delegateState } = useDelegateVotes();
   const locale = useActiveLocale();
@@ -81,11 +78,10 @@ const ChangeDelegatePannel: React.FC<ChangeDelegatePannelProps> = props => {
       if (reverseENSResult) {
         setDelegateAddress(reverseENSResult);
       }
-      setHasResolvedDeepLinkedENS(true);
     };
 
     checkIsValidENS();
-  }, [delegateAddress, delegateTo, library]);
+  }, [delegateAddress, library]);
 
   useEffect(() => {
     if (delegateAddress.length === 0) {
@@ -97,7 +93,7 @@ const ChangeDelegatePannel: React.FC<ChangeDelegatePannelProps> = props => {
         setDelegateInputClass(classes.invalid);
       }
     }
-  }, [delegateAddress, delegateTo, hasResolvedDeepLinkedENS]);
+  }, [delegateAddress]);
 
   const etherscanTxLink = buildEtherscanTxLink(delegateState.transaction?.hash ?? '');
 
@@ -130,7 +126,7 @@ const ChangeDelegatePannel: React.FC<ChangeDelegatePannelProps> = props => {
           </div>
         }
         buttonStyle={
-          isAddress(delegateAddress) && delegateAddress !== currentDelegate && availableVotes > 0
+          isAddress(delegateAddress) && delegateAddress !== currentDelegate
             ? NavBarButtonStyle.DELEGATE_SECONDARY
             : NavBarButtonStyle.DELEGATE_DISABLED
         }
@@ -138,9 +134,8 @@ const ChangeDelegatePannel: React.FC<ChangeDelegatePannelProps> = props => {
           delegateVotes(delegateAddress);
         }}
         disabled={
-          (changeDelegateState === ChangeDelegateState.ENTER_DELEGATE_ADDRESS &&
-            !isAddress(delegateAddress)) ||
-          availableVotes === 0
+          changeDelegateState === ChangeDelegateState.ENTER_DELEGATE_ADDRESS &&
+          !isAddress(delegateAddress)
         }
       />,
       <NavBarButton
@@ -200,7 +195,7 @@ const ChangeDelegatePannel: React.FC<ChangeDelegatePannelProps> = props => {
         <p className={currentDelegatePannelClasses.copy}>{primaryCopy}</p>
       </div>
 
-      {!(changeDelegateState === ChangeDelegateState.CHANGE_FAILURE) && delegateTo === undefined && (
+      {!(changeDelegateState === ChangeDelegateState.CHANGE_FAILURE) && (
         <FormControl
           className={clsx(classes.delegateInput, delegateInputClass)}
           type="string"
@@ -211,12 +206,6 @@ const ChangeDelegatePannel: React.FC<ChangeDelegatePannelProps> = props => {
           value={delegateInputText}
           placeholder={locale === 'en-US' ? '0x... or ...eth' : '0x... / ...eth'}
         />
-      )}
-
-      {delegateTo !== undefined && !isAddress(delegateAddress) && (
-        <div className={classes.delegteDeepLinkSpinner}>
-          <BrandSpinner />
-        </div>
       )}
 
       <Collapse
