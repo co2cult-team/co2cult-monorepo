@@ -45,5 +45,22 @@
       "yarn lint",
       "yarn format"
     ]
-  }
+  },
+  "description": "Nouns DAO is a generative avatar art collective run by a group of crypto misfits.",
+  "version": "1.0.0",
+  "main": ".eslintrc.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/co2cult-team/co2cult-monorepo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/co2cult-team/co2cult-monorepo/issues"
+  },
+  "homepage": "https://github.com/co2cult-team/co2cult-monorepo#readme",
+  "keywords": []
 }
