@@ -82,6 +82,7 @@ const NavBar = () => {
               )}
             </Nav.Item>
           </div>
+          
           <Navbar.Toggle
             className={classes.navBarToggle}
             aria-controls="basic-navbar-nav"
