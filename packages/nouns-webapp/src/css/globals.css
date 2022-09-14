@@ -10,3 +10,31 @@
 body {
   overflow-x: hidden;
 }
+
+.navbar {
+border:1px solid green;
+}
+
+
+collapse {
+border:1px solid purple!important;
+}
+  
+.navbar-toggler {
+border:3px dashed yellow!important;
+}
+
+.collapsed {
+border:2px dotted orange!important;
+}
+
+.navbar-collapse {
+  border:1px solid red!important;
+}
+  
+@media (min-width: 500px)
+.navbar-collapse {
+  border:1px dashed yellow!important;
+    display: flex!important;
+    flex-basis: auto;
+}
